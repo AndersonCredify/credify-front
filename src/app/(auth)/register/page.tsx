@@ -1,18 +1,12 @@
-import RegisterForm from "@/components/RegisterForm";
+import AuthPage from "@/components/AuthPage";
+import FormRegister from "@/components/FormRegister";
 
 function Register() {
-
-
-
   return (
-    <div>
-      <h1 className="text-2xl">Criar nova conta</h1>
-      <span className=" text-text-secundary">
-        Informe os dados para a criação da nova conta
-      </span>
-      <RegisterForm/>
-    </div>
+    <AuthPage title="Criar nova conta" subTitle="Informe os dados para a criação da nova conta">
+      <FormRegister />
+    </AuthPage>
   );
 }
 
-export default Register
+export default Register;

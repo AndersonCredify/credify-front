@@ -1,14 +1,19 @@
-function AuthSelect(props: {
+import { InputHTMLAttributes } from 'react'
+
+interface IAuthSelectProps extends InputHTMLAttributes<HTMLInputElement> {
   options: string[];
   setState: (value: string) => void;
   state: string;
   label?: string;
-}) {
-  return (
-    <div>
-      {props.label && <label htmlFor="">{props.label}</label>}
+  error?: boolean
+}
 
-      <div className="relative flex w-full overflow-hidden border rounded border-black-20 focus-within:border-black-60 focus-within:outline-double focus-within:outline-2 focus-within:outline-black-20">
+
+function AuthSelect(props: IAuthSelectProps) {
+  return (
+    <div className="flex flex-col gap-4">
+      {props.label && <label htmlFor="">{props.label}</label>}
+      <div className={`relative flex w-full overflow-hidden border rounded  ${props.error ? 'border-red-500' : 'border-black-20'} focus-within:border-black-60 focus-within:outline-double focus-within:outline-2 focus-within:outline-black-20`}>
         <select
           value={props.state}
           onChange={(e) => props.setState(e.currentTarget.value)}

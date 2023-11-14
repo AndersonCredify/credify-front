@@ -4,26 +4,79 @@ import { useState } from "react";
 import AuthSelect from "./AuthSelect";
 import AuthInput from "./AuthInput";
 import AuthCheckBox from "./AuthCheckBox";
-import { IMaskInput } from "react-imask";
+import Button from "./Button";
 
-function RegisterForm() {
-  const [cnpj, setCnpj] = useState("");
-  const [cpf, setCpf] = useState("");/* 
-  const [email, setEmail] = useState("");
-  const [email, setEmail] = useState("");
-  const [email, setEmail] = useState("");
-  const [email, setEmail] = useState(""); */
-  const [email, setEmail] = useState("");
+function FormRegister() {
   const [registerPage, setRegisterPage] = useState(1);
   const [stateConta, setStateConta] = useState("Tipo de conta");
+  const [cnpj, setCnpj] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [nasc, setNasc] = useState("");
+  const [cel, setCel] = useState("");
+  const [email, setEmail] = useState("");
   const [stateCargo, setStateCargo] = useState("Cargo");
   const [stateDepartamento, setStateDepartamento] = useState("Departamento");
   const [stateUF, setStateUF] = useState("UF");
   const [validaçãoCadastral, setValidaçãoCadastral] = useState(false);
   const optionsConta = ["Tipo de conta", "Juridica", "Fisica"];
-  const optionsCargo = ["Cargo"];
-  const optionsDepartamento = ["Departamento"];
+  const optionsCargo = [
+    "Cargo",
+    "C-level",
+    "Sócio",
+    "Diretor",
+    "Gerente",
+    "Coordenador",
+    "Supervisor",
+    "Arquiteto",
+    "Analista",
+    "Estagiário",
+    "Estudante",
+  ];
+
+  const optionsDepartamento = [
+    "Departamento",
+    "Administrativo",
+    "Comercial",
+    "Departamento Pessoal",
+    "Engenharia",
+    "Financeiro",
+    "Canais",
+    "Compras",
+    "CS/Relacionamento",
+    "E-commerce",
+    "Logistica/Expedição",
+    "Marketing",
+    "Novovs Negócios/Expansão",
+    "Operacional",
+    "Planejameto",
+    "Produtos",
+    "Projetos",
+    "Suprimentos",
+    "TI",
+  ];
   const optionsUF = ["UF"];
+  const [error, setError] = useState<string[]>([]);
+
+  const formOneValidation = (e: any) => {
+    e.preventDefault();
+    let errorArray: string[] = [];
+    if (stateConta === "Tipo de conta") {
+      errorArray.push("stateConta-error");
+    }
+    setCnpj(cnpj.toString().replace(/[^\d]+/g, ""));
+    if (cnpj.length !== 14) {
+      console.log(cnpj);
+      errorArray.push("cnpj-error");
+    }
+    setCpf(cpf.toString().replace(/[^\d]+/g, ""));
+    if (cpf.length !== 11) {
+      errorArray.push("cpf-error");
+    }
+    setError(errorArray);
+    if (errorArray.length === 0) {
+      setRegisterPage(registerPage + 1);
+    }
+  };
 
   return (
     <>
@@ -53,55 +106,62 @@ function RegisterForm() {
       <form className="mt-7 flex flex-col gap-4 text-sm ">
         {/* ---------------------FORM #1--------------------- */}
         {registerPage === 1 && (
-          <div className="flex flex-col gap-7">
-            <AuthSelect
-              options={optionsConta}
-              state={stateConta}
-              setState={setStateConta}
-              label="Selecione o tipo de conta"
-            />
+          <div className="flex flex-col gap-4">
+            <div className="pb-4">
+              <AuthSelect
+                options={optionsConta}
+                state={stateConta}
+                setState={setStateConta}
+                label="Selecione o tipo de conta"
+                error={error.includes("stateConta-error")}
+              />
+            </div>
             {stateConta !== "Fisica" && (
               <AuthInput
                 setState={setCnpj}
                 state={cnpj}
-                isPassword={false}
+                type="text"
                 placeholder="Informe o CNPJ da empresa"
                 label="CNPJ"
-                /* mask="00.000.000/0000-00" */
+                mask="00.000.000/0000-00"
+                error={error.includes("cnpj-error")}
               />
             )}
-            <IMaskInput mask="00.000.000/0000-00" type="string"  placeholder="Digite o seu CNPJ" className="w-3/5 h-10" />
             <AuthInput
-              setState={setEmail}
-              state={email}
-              isPassword={false}
+              setState={setCpf}
+              state={cpf}
+              type="text"
               placeholder="Informe o seu CPF"
               label={
                 stateConta !== "Fisica"
                   ? "CPF do responsável pela conta"
                   : "Informe o seu CPF"
               }
+              mask="000.000.000-00"
+              error={error.includes("cpf-error")}
             />
             <AuthInput
-              setState={setEmail}
-              state={email}
-              isPassword={false}
+              setState={setNasc}
+              state={nasc}
+              type="date"
               placeholder="Data de Nascimento"
               label="Data de nascimento"
             />
             <AuthInput
-              setState={setEmail}
-              state={email}
-              isPassword={false}
+              setState={setCel}
+              state={cel}
+              type="text"
               placeholder="DDD + Número"
               label="Celular"
+              mask="(00)00000-0000"
             />
             <AuthInput
               setState={setEmail}
               state={email}
-              isPassword={false}
+              type="text"
               placeholder="Email"
               label="Email"
+              error={error.includes("email-error")}
             />
             <AuthSelect
               options={optionsCargo}
@@ -123,42 +183,42 @@ function RegisterForm() {
             <AuthInput
               setState={setEmail}
               state={email}
-              isPassword={false}
+              type="text"
               placeholder="Informe seu CEP"
               label="CEP"
             />
             <AuthInput
               setState={setEmail}
               state={email}
-              isPassword={false}
+              type="text"
               placeholder="Número"
               label="Número"
             />
             <AuthInput
               setState={setEmail}
               state={email}
-              isPassword={false}
+              type="text"
               placeholder="Complemento"
               label="Complemento"
             />
             <AuthInput
               setState={setEmail}
               state={email}
-              isPassword={false}
+              type="text"
               placeholder="Logradouro"
               label="Rua, Av, Al."
             />
             <AuthInput
               setState={setEmail}
               state={email}
-              isPassword={false}
+              type="text"
               placeholder="Bairro"
               label="Bairro"
             />
             <AuthInput
               setState={setEmail}
               state={email}
-              isPassword={false}
+              type="text"
               placeholder="Cidade"
               label="Cidade"
             />
@@ -221,16 +281,16 @@ function RegisterForm() {
             <AuthInput
               setState={setEmail}
               state={email}
-              isPassword={false}
+              type="text"
               placeholder="Informe o numero"
               label="Quantidade de consultas mensal"
             />
           </div>
         )}
         <div className="flex flex-col text-white gap-5">
-          <button
-            onClick={(e) => {
-              e.preventDefault(), setRegisterPage(registerPage + 1);
+          <Button
+            onClick={(e: any) => {
+              formOneValidation(e);
             }}
             className="bg-black-10 hover:bg-zinc-700 transition-colors ease-in-out duration-300 flex gap-2 items-center justify-center py-3 rounded"
           >
@@ -245,11 +305,11 @@ function RegisterForm() {
                 />
               </>
             )}
-          </button>
+          </Button>
 
           {registerPage !== 1 && (
-            <button
-              onClick={(e) => {
+            <Button
+              onClick={(e: any) => {
                 e.preventDefault(), setRegisterPage(registerPage - 1);
               }}
               className="bg-[#727272] hover:bg-zinc-600 transition-colors ease-in-out duration-300 flex gap-2  items-center justify-center py-3 rounded"
@@ -260,7 +320,7 @@ function RegisterForm() {
                 className="transform rotate-180"
               />
               Voltar
-            </button>
+            </Button>
           )}
         </div>
       </form>
@@ -268,4 +328,4 @@ function RegisterForm() {
   );
 }
 
-export default RegisterForm;
+export default FormRegister;
